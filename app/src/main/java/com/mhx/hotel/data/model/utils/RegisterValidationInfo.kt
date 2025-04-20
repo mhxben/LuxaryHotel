@@ -5,10 +5,10 @@ import com.mhx.hotel.data.model.RegisterRequest
 class RegisterValidationInfo {
     fun registervalidationInfo(request : RegisterRequest):String?{
         return when {
-            request.fullName.isBlank() &&request.username.isBlank() && request.password.isBlank() ->{
+            request.fullname.isBlank() &&request.username.isBlank() && request.password.isBlank() ->{
                 return "Please fill in the required fields"
             }
-            request.fullName.isBlank() ->{
+            request.fullname.isBlank() ->{
                 return "Please enter your name"
             }
             request.username.isBlank()->{
@@ -20,8 +20,8 @@ class RegisterValidationInfo {
             request.password.length <6 ->{
                 return "Your password is too short"
             }
-            request.dateOfBirth.isBlank() ->{
-                return "Please Enter your date of birth"
+            request.password != request.password2 ->{
+                return "Your password aren't match"
             }
             else -> null
         }

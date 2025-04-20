@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mhx.hotel.data.model.LoginRequest
 import com.mhx.hotel.presentation.view.component.model.OutlinedTextFieldClass
@@ -17,6 +18,7 @@ import com.mhx.hotel.R
 import com.mhx.hotel.data.model.utils.LoginValidateInfo
 import com.mhx.hotel.presentation.navigation.NavigationActions
 import com.mhx.hotel.presentation.view.component.*
+import com.mhx.hotel.presentation.viewmodel.LoginViewModel
 import com.mhx.hotel.ui.theme.AccentYellow
 import com.mhx.hotel.ui.theme.DarkPrimary
 
@@ -26,6 +28,7 @@ fun LoginPage(navController: NavController) {
     var loginRequest by remember { mutableStateOf(LoginRequest("",""))}
     val validator = LoginValidateInfo()
     val context = LocalContext.current
+    val viewModel : LoginViewModel = viewModel()
 
     StaticColumn {
         Image(
@@ -58,12 +61,22 @@ fun LoginPage(navController: NavController) {
             if ( errorMessage != null){
                 Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
             }else{
-                NavigationActions.navigationToHome(navController)
-                //viewmodel
+                viewModel.login(loginRequest)
             }
         })
+        LaunchedEffect(viewModel.loginResponse to viewModel.errorMessage){
+            viewModel.loginResponse?.let { response ->
+                Toast.makeText(context,"hi ${response.fullname}" , Toast.LENGTH_LONG).show()
+                NavigationActions.navigationToHome(navController, response.user_id)
+                viewModel.loginResponse = null
+            }
+            viewModel.errorMessage?.let { error ->
+                Toast.makeText(context,error, Toast.LENGTH_LONG).show()
+                viewModel.errorMessage = null
+            }
+        }
         StaticRow {
-            PrimaryText("Haven't you an account ?" , Color.White)
+            PrimaryText("Haven't you an account ?" , DarkPrimary)
             PrimaryText(" Create a one" , AccentYellow , Modifier.clickable { NavigationActions.navigationToSignUp(navController)})
         }
     }

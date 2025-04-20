@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mhx.hotel.R
 import com.mhx.hotel.data.model.RegisterRequest
@@ -16,15 +17,16 @@ import com.mhx.hotel.data.model.utils.RegisterValidationInfo
 import com.mhx.hotel.presentation.view.component.*
 import com.mhx.hotel.presentation.view.component.model.OutlinedTextFieldClass
 import com.mhx.hotel.presentation.navigation.NavigationActions
+import com.mhx.hotel.presentation.viewmodel.RegisterViewModel
 import com.mhx.hotel.ui.theme.*
 
 @Composable
 fun SignUpPage(navController: NavController){
-    var registerRequest by remember { mutableStateOf(RegisterRequest("" , "" ,"","")) }
+    var registerRequest by remember { mutableStateOf(RegisterRequest("" ,"", "" ,"","CLIENT","" )) }
     var isPasswordVisible by remember { mutableStateOf(false) }
     val validator = RegisterValidationInfo()
     val context = LocalContext.current
-
+    val viewModel : RegisterViewModel = viewModel()
     StaticColumn {
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -42,8 +44,8 @@ fun SignUpPage(navController: NavController){
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
                     label = "Full Name",
-                    value = registerRequest.fullName,
-                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(fullName = newFullName)},
+                    value = registerRequest.fullname,
+                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(fullname = newFullName)},
                     keyboardType = KeyboardType.Text
                 )
             )
@@ -51,16 +53,16 @@ fun SignUpPage(navController: NavController){
                 params = OutlinedTextFieldClass(
                     label = "Username",
                     value = registerRequest.username,
-                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(fullName = newFullName)},
+                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(username = newFullName)},
                     keyboardType = KeyboardType.Text
                 )
             )
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
-                    value = registerRequest.dateOfBirth,
-                    onValueChange = { registerRequest = registerRequest.copy(dateOfBirth = it) },
-                    label = "Date of birth",
-                    isDatePicker = true
+                    value = registerRequest.email,
+                    onValueChange = { registerRequest = registerRequest.copy(email = it) },
+                    label = "Email",
+                    keyboardType = KeyboardType.Email
                 )
             )
             MainOutlinedTextField(
@@ -77,8 +79,8 @@ fun SignUpPage(navController: NavController){
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
                     label = "Confirm password",
-                    value = registerRequest.password,
-                    onValueChange = { newPassword -> registerRequest = registerRequest.copy(password = newPassword) },
+                    value = registerRequest.password2,
+                    onValueChange = { newPassword -> registerRequest = registerRequest.copy(password2 = newPassword) },
                     keyboardType = KeyboardType.Password,
                     isPasswordField = true,
                     isPasswordVisible = isPasswordVisible,
@@ -90,10 +92,20 @@ fun SignUpPage(navController: NavController){
                 if (errorMessage != null){
                     Toast.makeText(context , errorMessage, Toast.LENGTH_LONG ).show()
                 }else{
-                    NavigationActions.navigationToHome(navController)
-                    //view model
+                    viewModel.register(registerRequest)
                 }
             })
+            LaunchedEffect(viewModel.registerResponse to viewModel.errorMessage){
+                viewModel.registerResponse?.let { response ->
+                    Toast.makeText(context,"Your creating done ${response.fullname}" , Toast.LENGTH_LONG).show()
+                    NavigationActions.navigationToLogin(navController)
+                    viewModel.registerResponse = null
+                }
+                viewModel.errorMessage?.let { errorMessage ->
+                    Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
+                    viewModel.errorMessage = null
+                }
+            }
             StaticRow {
                 PrimaryText("Have you an account ?" , DarkPrimary)
                 PrimaryText(" Login" , AccentYellow , Modifier.clickable { NavigationActions.navigationToLogin(navController)})

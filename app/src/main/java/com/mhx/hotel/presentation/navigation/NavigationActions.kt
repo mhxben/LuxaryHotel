@@ -14,4 +14,7 @@ object NavigationActions {
     fun navigationToHome(navController: NavController){
         navController.navigate(NavigationRoutes.Home)
     }
+    fun navigationToHome(navController: NavController, userId: Int){
+        navController.navigate(NavigationRoutes.HomeWithId(userId))
+    }
 }

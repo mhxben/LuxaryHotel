@@ -13,6 +13,9 @@ fun AppNavigation() {
         composable(NavigationRoutes.Landing) { LandingPage(navController) }
         composable(NavigationRoutes.Login) { LoginPage(navController) }
         composable(NavigationRoutes.SignUp) { SignUpPage(navController) }
-        composable(NavigationRoutes.Home) { HomePage(navController) }
+        composable(NavigationRoutes.Home) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: return@composable
+            HomePage(navController, userId)
+        }
     }
 }
