@@ -5,6 +5,7 @@ object NavigationRoutes {
     const val Login = "login"
     const val SignUp = "signUp"
     const val Home = "home/{userId}"
+    const val Booking = "booking"
 
     fun HomeWithId(userId: Int) = "home/$userId"
 }

@@ -9,16 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mhx.hotel.R
+import com.mhx.hotel.data.remote.SharedPrefs
 import com.mhx.hotel.presentation.navigation.NavigationActions
 import com.mhx.hotel.ui.theme.DarkPrimary
 import kotlinx.coroutines.delay
 
 @Composable
 fun LandingPage(navController: NavController){
+    val context = LocalContext.current
     Box(
         Modifier
             .fillMaxSize()
@@ -27,7 +30,13 @@ fun LandingPage(navController: NavController){
     ){
         LaunchedEffect(Unit){
             delay(2000)
-            NavigationActions.navigationToLogin(navController)
+            val token = SharedPrefs.getToken(context)
+
+            if (token != null) {
+                NavigationActions.navigationToHome(navController)
+            } else {
+                NavigationActions.navigationToLogin(navController)
+            }
         }
         Image(
             painter = painterResource(R.drawable.logo),

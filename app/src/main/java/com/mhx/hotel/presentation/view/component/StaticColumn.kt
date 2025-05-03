@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StaticColumn(modifier: Modifier = Modifier , content: @Composable ColumnScope.() -> Unit ) {
     Column(
-        Modifier
+        modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),

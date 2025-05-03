@@ -1,8 +1,7 @@
 package com.mhx.hotel.data.model
 
-data class RegisterRequest(
+data class UserAuth(
     val email: String,
-    val password: String,
-    val role: String,
+    val id: Int,
     val username: String
 )

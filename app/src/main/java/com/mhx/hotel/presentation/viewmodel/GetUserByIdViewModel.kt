@@ -10,10 +10,10 @@ import kotlinx.coroutines.launch
 class GetUserByIdViewModel : ViewModel() {
     var user by mutableStateOf<User?>(null)
     var errorMessage by mutableStateOf<String?>(null)
-    fun getUserById(userId: String) {
+    fun getUserById(userId: Int) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.instance.getUserById(userId)
+                val response = RetrofitClient.instance.getUserFromId(userId)
                 if (response.isSuccessful){
                     user = response.body()
                 }else{

@@ -10,12 +10,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mhx.hotel.data.model.LoginRequest
 import com.mhx.hotel.presentation.view.component.model.OutlinedTextFieldClass
 import com.mhx.hotel.R
 import com.mhx.hotel.data.model.utils.LoginValidateInfo
+import com.mhx.hotel.data.remote.SharedPrefs
 import com.mhx.hotel.presentation.navigation.NavigationActions
 import com.mhx.hotel.presentation.view.component.*
 import com.mhx.hotel.presentation.viewmodel.LoginViewModel
@@ -28,7 +31,11 @@ fun LoginPage(navController: NavController) {
     var loginRequest by remember { mutableStateOf(LoginRequest("",""))}
     val validator = LoginValidateInfo()
     val context = LocalContext.current
-    val viewModel : LoginViewModel = viewModel()
+    val viewModel: LoginViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return LoginViewModel(context) as T
+        }
+    })
 
     StaticColumn {
         Image(
@@ -61,17 +68,16 @@ fun LoginPage(navController: NavController) {
             if ( errorMessage != null){
                 Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
             }else{
-                viewModel.login(loginRequest)
+                viewModel.loginByUsername(loginRequest.username)
             }
         })
-        LaunchedEffect(viewModel.loginResponse to viewModel.errorMessage){
-            viewModel.loginResponse?.let { response ->
-                Toast.makeText(context,"hi ${response.fullname}" , Toast.LENGTH_LONG).show()
-                NavigationActions.navigationToHome(navController, response.user_id)
-                viewModel.loginResponse = null
+        LaunchedEffect(viewModel.userId, viewModel.errorMessage) {
+            viewModel.userId?.let {
+                NavigationActions.navigationToHome(navController)
+                viewModel.userId = null
             }
             viewModel.errorMessage?.let { error ->
-                Toast.makeText(context,error, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, error, Toast.LENGTH_LONG).show()
                 viewModel.errorMessage = null
             }
         }

@@ -22,8 +22,9 @@ import com.mhx.hotel.ui.theme.*
 
 @Composable
 fun SignUpPage(navController: NavController){
-    var registerRequest by remember { mutableStateOf(RegisterRequest("" ,"", "" ,"","CLIENT","" )) }
+    var registerRequest by remember { mutableStateOf(RegisterRequest("" ,"", "client" , "")) }
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var confirmPassword by remember{ mutableStateOf("") }
     val validator = RegisterValidationInfo()
     val context = LocalContext.current
     val viewModel : RegisterViewModel = viewModel()
@@ -43,17 +44,9 @@ fun SignUpPage(navController: NavController){
         {
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
-                    label = "Full Name",
-                    value = registerRequest.fullname,
-                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(fullname = newFullName)},
-                    keyboardType = KeyboardType.Text
-                )
-            )
-            MainOutlinedTextField(
-                params = OutlinedTextFieldClass(
                     label = "Username",
                     value = registerRequest.username,
-                    onValueChange = {newFullName -> registerRequest = registerRequest.copy(username = newFullName)},
+                    onValueChange = {newUsername -> registerRequest = registerRequest.copy(username = newUsername)},
                     keyboardType = KeyboardType.Text
                 )
             )
@@ -69,18 +62,16 @@ fun SignUpPage(navController: NavController){
                 params = OutlinedTextFieldClass(
                     label = "Password",
                     value = registerRequest.password,
-                    onValueChange = { newPassword -> registerRequest = registerRequest.copy(password = newPassword) },
-                    keyboardType = KeyboardType.Password,
-                    isPasswordField = true,
-                    isPasswordVisible = isPasswordVisible,
-                    onVisibilityToggle = { isPasswordVisible = !isPasswordVisible }
+                    onValueChange = {newPassword -> registerRequest = registerRequest.copy(password = newPassword)},
+                    keyboardType = KeyboardType.Text
                 )
             )
+
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
-                    label = "Confirm password",
-                    value = registerRequest.password2,
-                    onValueChange = { newPassword -> registerRequest = registerRequest.copy(password2 = newPassword) },
+                    label = "Confirm Password",
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it},
                     keyboardType = KeyboardType.Password,
                     isPasswordField = true,
                     isPasswordVisible = isPasswordVisible,
@@ -89,7 +80,9 @@ fun SignUpPage(navController: NavController){
             )
             AppButton("Create account ",onClick={
                 val errorMessage = validator.registervalidationInfo(registerRequest)
-                if (errorMessage != null){
+                if (confirmPassword != registerRequest.password){
+                    Toast.makeText(context,"Please enter a match password" , Toast.LENGTH_LONG).show()
+                }else if (errorMessage != null){
                     Toast.makeText(context , errorMessage, Toast.LENGTH_LONG ).show()
                 }else{
                     viewModel.register(registerRequest)
@@ -97,7 +90,7 @@ fun SignUpPage(navController: NavController){
             })
             LaunchedEffect(viewModel.registerResponse to viewModel.errorMessage){
                 viewModel.registerResponse?.let { response ->
-                    Toast.makeText(context,"Your creating done ${response.fullname}" , Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,"Your creating done ${response.username}" , Toast.LENGTH_LONG).show()
                     NavigationActions.navigationToLogin(navController)
                     viewModel.registerResponse = null
                 }
