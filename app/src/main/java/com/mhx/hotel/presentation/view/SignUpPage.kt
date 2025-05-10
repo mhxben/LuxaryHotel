@@ -22,12 +22,11 @@ import com.mhx.hotel.ui.theme.*
 
 @Composable
 fun SignUpPage(navController: NavController){
-    var registerRequest by remember { mutableStateOf(RegisterRequest("" ,"", "client" , "")) }
+    var registerRequest by remember { mutableStateOf(RegisterRequest("" ,"", "" , "" , "" ,"client" , "")) }
     var isPasswordVisible by remember { mutableStateOf(false) }
-    var confirmPassword by remember{ mutableStateOf("") }
     val validator = RegisterValidationInfo()
-    val context = LocalContext.current
     val viewModel : RegisterViewModel = viewModel()
+    val context = LocalContext.current
     StaticColumn {
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -42,6 +41,22 @@ fun SignUpPage(navController: NavController){
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp))
         {
+            MainOutlinedTextField(
+                params = OutlinedTextFieldClass(
+                    label = "First Name",
+                    value = registerRequest.first_name,
+                    onValueChange = {newFirstName -> registerRequest = registerRequest.copy(first_name = newFirstName)},
+                    keyboardType = KeyboardType.Text
+                )
+            )
+            MainOutlinedTextField(
+                params = OutlinedTextFieldClass(
+                    label = "Last Name",
+                    value = registerRequest.last_name,
+                    onValueChange = {newLastName -> registerRequest = registerRequest.copy(last_name = newLastName)},
+                    keyboardType = KeyboardType.Text
+                )
+            )
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
                     label = "Username",
@@ -70,8 +85,8 @@ fun SignUpPage(navController: NavController){
             MainOutlinedTextField(
                 params = OutlinedTextFieldClass(
                     label = "Confirm Password",
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it},
+                    value = registerRequest.confirm_password,
+                    onValueChange = { newConfirmPassword -> registerRequest = registerRequest.copy(confirm_password = newConfirmPassword)},
                     keyboardType = KeyboardType.Password,
                     isPasswordField = true,
                     isPasswordVisible = isPasswordVisible,
@@ -79,24 +94,22 @@ fun SignUpPage(navController: NavController){
                 )
             )
             AppButton("Create account ",onClick={
-                val errorMessage = validator.registervalidationInfo(registerRequest)
-                if (confirmPassword != registerRequest.password){
-                    Toast.makeText(context,"Please enter a match password" , Toast.LENGTH_LONG).show()
-                }else if (errorMessage != null){
+                val errorMessage = validator.registerValidationInfo(registerRequest)
+                if (errorMessage != null){
                     Toast.makeText(context , errorMessage, Toast.LENGTH_LONG ).show()
                 }else{
                     viewModel.register(registerRequest)
                 }
             })
-            LaunchedEffect(viewModel.registerResponse to viewModel.errorMessage){
-                viewModel.registerResponse?.let { response ->
-                    Toast.makeText(context,"Your creating done ${response.username}" , Toast.LENGTH_LONG).show()
+            LaunchedEffect(viewModel.registerResponse) {
+                viewModel.registerResponse?.let {
+                    Toast.makeText(context, "Account created successfully!", Toast.LENGTH_LONG).show()
                     NavigationActions.navigationToLogin(navController)
-                    viewModel.registerResponse = null
                 }
-                viewModel.errorMessage?.let { errorMessage ->
-                    Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
-                    viewModel.errorMessage = null
+            }
+            LaunchedEffect(viewModel.errorMessage) {
+                viewModel.errorMessage?.let {
+                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
                 }
             }
             StaticRow {

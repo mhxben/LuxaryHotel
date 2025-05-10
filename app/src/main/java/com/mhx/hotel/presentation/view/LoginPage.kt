@@ -5,25 +5,20 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mhx.hotel.data.model.LoginRequest
 import com.mhx.hotel.presentation.view.component.model.OutlinedTextFieldClass
 import com.mhx.hotel.R
+import com.mhx.hotel.data.model.LoginRequest
 import com.mhx.hotel.data.model.utils.LoginValidateInfo
-import com.mhx.hotel.data.remote.SharedPrefs
 import com.mhx.hotel.presentation.navigation.NavigationActions
 import com.mhx.hotel.presentation.view.component.*
 import com.mhx.hotel.presentation.viewmodel.LoginViewModel
-import com.mhx.hotel.ui.theme.AccentYellow
-import com.mhx.hotel.ui.theme.DarkPrimary
+import com.mhx.hotel.ui.theme.*
 
 @Composable
 fun LoginPage(navController: NavController) {
@@ -31,11 +26,7 @@ fun LoginPage(navController: NavController) {
     var loginRequest by remember { mutableStateOf(LoginRequest("",""))}
     val validator = LoginValidateInfo()
     val context = LocalContext.current
-    val viewModel: LoginViewModel = viewModel(factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return LoginViewModel(context) as T
-        }
-    })
+    val viewModel : LoginViewModel = viewModel()
 
     StaticColumn {
         Image(
@@ -47,9 +38,9 @@ fun LoginPage(navController: NavController) {
         PrimaryText("A booking platform" , AccentYellow)
         MainOutlinedTextField(
             params = OutlinedTextFieldClass(
-                label = "Username",
-                value = loginRequest.username,
-                onValueChange = {newEmail -> loginRequest = loginRequest.copy(username = newEmail)},
+                label = "Email",
+                value = loginRequest.email,
+                onValueChange = {newEmail -> loginRequest = loginRequest.copy(email = newEmail)},
                 keyboardType = KeyboardType.Email)
         )
         MainOutlinedTextField(
@@ -68,17 +59,17 @@ fun LoginPage(navController: NavController) {
             if ( errorMessage != null){
                 Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
             }else{
-                viewModel.loginByUsername(loginRequest.username)
+                viewModel.login(context , loginRequest)
             }
         })
-        LaunchedEffect(viewModel.userId, viewModel.errorMessage) {
-            viewModel.userId?.let {
+        LaunchedEffect(viewModel.loginResponse) {
+            viewModel.loginResponse?.let {
                 NavigationActions.navigationToHome(navController)
-                viewModel.userId = null
             }
-            viewModel.errorMessage?.let { error ->
-                Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                viewModel.errorMessage = null
+        }
+        LaunchedEffect(viewModel.errorMessage) {
+            viewModel.errorMessage?.let {
+                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
             }
         }
         StaticRow {

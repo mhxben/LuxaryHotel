@@ -4,35 +4,28 @@ import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhx.hotel.data.remote.RetrofitClient
-import com.mhx.hotel.data.remote.SharedPrefs
+import com.mhx.hotel.data.model.*
+import com.mhx.hotel.data.remote.*
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val context: Context) : ViewModel() {
-    var userId by mutableStateOf<Int?>(null)
+class LoginViewModel : ViewModel(){
+    var loginResponse by mutableStateOf<LoginResponse?>(null)
     var errorMessage by mutableStateOf<String?>(null)
-
-    fun loginByUsername(usernameInput: String) {
+    fun login (context : Context, request : LoginRequest) {
         viewModelScope.launch {
+            val response = RetrofitClient.instance.loginAuth(request)
             try {
-                val response = RetrofitClient.instance.loginAuth() // GET all users
-                if (response.isSuccessful) {
-                    val users = response.body() ?: emptyList()
-                    val matchedUser = users.find { it.username == usernameInput }
-
-                    if (matchedUser != null) {
-                        userId = matchedUser.id
-                        SharedPrefs.saveUserId(context, matchedUser.id)
-                    } else {
-                        errorMessage = "Username not found"
-                    }
-                } else {
-                    errorMessage = response.errorBody()?.string()
+                if(response.isSuccessful){
+                    loginResponse = response.body()
+                    val token = loginResponse?.access ?:return@launch
+                    val bearerToken = "Bearer $token"
+                    SharedPrefs.saveToken(context,bearerToken)
+                }else{
+                    errorMessage = response.errorBody()?.string() ?: "Login failed"
                 }
-            } catch (e: Exception) {
-                errorMessage = e.message
+            }catch (e : Exception){
+                errorMessage = e.message ?: "Unexpected error"
             }
         }
     }
-
 }

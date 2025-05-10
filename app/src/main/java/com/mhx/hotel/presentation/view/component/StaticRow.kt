@@ -18,3 +18,16 @@ fun StaticRow(modifier: Modifier = Modifier ,content: @Composable RowScope.() ->
         content()
     }
 }
+
+@Composable
+fun CustomRow(modifier: Modifier = Modifier ,content: @Composable RowScope.() -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        content()
+    }
+}

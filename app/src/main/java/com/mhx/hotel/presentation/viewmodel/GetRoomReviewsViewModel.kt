@@ -3,24 +3,24 @@ package com.mhx.hotel.presentation.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mhx.hotel.data.model.User
+import com.mhx.hotel.data.model.Review
 import com.mhx.hotel.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
 
-class GetUserByIdViewModel : ViewModel() {
-    var user by mutableStateOf<User?>(null)
+class GetRoomReviewsViewModel : ViewModel() {
+    var reviews by mutableStateOf<List<Review>?>(null)
     var errorMessage by mutableStateOf<String?>(null)
-    fun getUserById(userId: Int) {
+    fun getRoomReviews(access : String , roomId :Int ) {
         viewModelScope.launch {
+            val response = RetrofitClient.instance.getRoomReviews(access)
             try {
-                val response = RetrofitClient.instance.getUserFromId(userId)
                 if (response.isSuccessful){
-                    user = response.body()
+                    reviews = response.body()?.filter { it.room == roomId }
                 }else{
                     errorMessage = response.errorBody()?.string()
                 }
-            }catch (e:Exception){
-                e.printStackTrace()
+            }catch (e: Exception){
+                errorMessage = e.message
             }
         }
     }

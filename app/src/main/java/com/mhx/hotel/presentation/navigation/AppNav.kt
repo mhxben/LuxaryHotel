@@ -16,5 +16,6 @@ fun AppNavigation() {
         composable(NavigationRoutes.SignUp) { SignUpPage(navController) }
         composable(NavigationRoutes.Home) { HomePage(navController) }
         composable(NavigationRoutes.Booking) { BookingPage(navController) }
+        composable(NavigationRoutes.Reservation) { ReservationFormulaireView(navController) }
     }
 }

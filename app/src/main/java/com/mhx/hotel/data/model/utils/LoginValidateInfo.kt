@@ -5,11 +5,11 @@ import com.mhx.hotel.data.model.LoginRequest
 class LoginValidateInfo {
     fun validateLoginInfos(request : LoginRequest) : String?{
         return when {
-            request.username.isBlank() && request.password.isBlank() ->{
+            request.email.isBlank() && request.password.isBlank() ->{
                 "Please enter your information"
             }
-            request.username.isBlank() ->{
-                "Please enter your username"
+            request.email.isBlank() ->{
+                "Please enter your email"
             }
 
             request.password.isBlank() ->{

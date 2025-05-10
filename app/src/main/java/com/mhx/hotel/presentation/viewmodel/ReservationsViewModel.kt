@@ -6,15 +6,15 @@ import com.mhx.hotel.data.model.*
 import com.mhx.hotel.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
 
-class ReviewViewModel : ViewModel() {
-    var postReview by mutableStateOf<ReviewResponse?>(null)
+class ReservationsViewModel : ViewModel() {
+    var reservationResponse by mutableStateOf<ReservationResponse?>(null)
     var errorMessage by mutableStateOf<String?>(null)
-    fun addReview(request: ReviewRequest){
+    fun postReservation(access : String ,request: ReservationRequest){
         viewModelScope.launch {
-            val response = RetrofitClient.instance.review(request)
+            val response = RetrofitClient.instance.addReservation(access,request)
             try {
-                if (response.isSuccessful) {
-                    postReview = response.body()
+                if(response.isSuccessful){
+                    reservationResponse = response.body()
                 }else{
                     errorMessage = response.errorBody().toString()
                 }
