@@ -38,4 +38,7 @@ interface AppApi {
 
     @POST("reservations/reservations/")
     suspend fun addReservation(@Header("Authorization") access : String , @Body request: ReservationRequest) : Response<ReservationResponse>
+
+    @GET("reservations/reservations/")
+    suspend fun getReservation(@Header("Authorization") access: String ) : Response<List<ReservationResponse>>
 }
