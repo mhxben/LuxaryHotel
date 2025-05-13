@@ -41,4 +41,10 @@ interface AppApi {
 
     @GET("reservations/reservations/")
     suspend fun getReservation(@Header("Authorization") access: String ) : Response<List<ReservationResponse>>
+
+    @GET("reservations/reservations/{id}")
+    suspend fun getReservationById(@Header("Authorization") access: String , @Path("id") id :Int ) : Response<ReservationResponse>
+
+    @POST("billing/billing/")
+    suspend fun postInvoice(@Header("Authorization") access :String , @Body request :InvoicePostRequest) : Response<InvoicePostResponse>
 }

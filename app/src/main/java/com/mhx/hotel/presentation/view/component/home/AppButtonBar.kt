@@ -9,13 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mhx.hotel.presentation.navigation.NavigationRoutes
 import com.mhx.hotel.presentation.view.component.model.BottomNavItem
 
 @Composable
 fun AppButtonBar(navController: NavController) {
     val items = listOf(
-        BottomNavItem("home", "Home", Icons.Default.Home),
-        BottomNavItem("bookings", "Booking", Icons.Default.List)
+        BottomNavItem(NavigationRoutes.Home, "Home", Icons.Default.Home),
+        BottomNavItem(NavigationRoutes.Bookings, "Booking", Icons.Default.List)
     )
 
     NavigationBar {
@@ -28,7 +29,7 @@ fun AppButtonBar(navController: NavController) {
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo("home") { inclusive = false }
+                            popUpTo(NavigationRoutes.Home) { inclusive = false }
                             launchSingleTop = true
                         }
                     }

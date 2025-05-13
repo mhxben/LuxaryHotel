@@ -1,7 +1,6 @@
 package com.mhx.hotel.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,7 +14,9 @@ fun AppNavigation() {
         composable(NavigationRoutes.Login) { LoginPage(navController) }
         composable(NavigationRoutes.SignUp) { SignUpPage(navController) }
         composable(NavigationRoutes.Home) { HomePage(navController) }
+        composable(NavigationRoutes.Bookings) { ReservationListView(navController) }
         composable(NavigationRoutes.Booking) { BookingPage(navController) }
         composable(NavigationRoutes.Reservation) { ReservationFormulaireView(navController) }
+        composable(NavigationRoutes.Pay) { PaymentPage(navController) }
     }
 }

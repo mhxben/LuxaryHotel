@@ -7,4 +7,6 @@ object NavigationRoutes {
     const val Home = "home"
     const val Booking = "booking"
     const val Reservation = "reservation"
+    const val Bookings = "bookings"
+    const val Pay = "payment"
 }

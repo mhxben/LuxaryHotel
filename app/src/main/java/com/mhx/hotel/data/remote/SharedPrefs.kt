@@ -9,6 +9,7 @@ object SharedPrefs {
     private const val USER_ID_KEY = "user_id"
     private const val ROOM_ID_KEY = "room_id"
     private const val HOTEL_ID_KEY = "hotel_id"
+    private const val RESERVATION_ID = "reservation_id"
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -66,5 +67,18 @@ object SharedPrefs {
 
     fun removeHotelId(context: Context) {
         prefs(context).edit().remove(HOTEL_ID_KEY).apply()
+    }
+
+    fun saveReservationId(context: Context, reservationId: Int) {
+        prefs(context).edit().putInt(RESERVATION_ID, reservationId).apply()
+    }
+
+    fun getReservationId(context: Context): Int? {
+        val id = prefs(context).getInt(RESERVATION_ID, -1)
+        return if (id != -1) id else null
+    }
+
+    fun removeReservationId(context: Context) {
+        prefs(context).edit().remove(RESERVATION_ID).apply()
     }
 }

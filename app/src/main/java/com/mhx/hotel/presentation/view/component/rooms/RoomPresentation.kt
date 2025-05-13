@@ -22,7 +22,8 @@ fun RoomPresentation(
     imageUrl : String,
     roomName:String,
     location : String,
-    price : String
+    price : String,
+    status: String? = null
 ) {
     Column(
         modifier = Modifier
@@ -40,7 +41,14 @@ fun RoomPresentation(
                 .height(150.dp)
                 .clip(RoundedCornerShape(20.dp))
         )
-        CustomText(roomName , DarkPrimary , 22 , Modifier.align(Alignment.Start))
+        CustomRow(
+            modifier = Modifier.align(Alignment.Start),
+        ) {
+            CustomText(roomName, DarkPrimary, 22)
+            status?.let {
+                PrimaryText("• $it", AccentYellow)
+            }
+        }
         CustomRow {
             Icon(
                 imageVector = Icons.Outlined.LocationCity,

@@ -20,4 +20,7 @@ object NavigationActions {
     fun navigationToReservationForm(navController: NavController){
         navController.navigate(NavigationRoutes.Reservation)
     }
+    fun navigationToPaymentPage(navController: NavController){
+        navController.navigate(NavigationRoutes.Pay)
+    }
 }
