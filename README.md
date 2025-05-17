@@ -37,7 +37,7 @@
 ---
 
 ## 📁 Project Structure
-
+```
 presentation/
 ├── view/
 │ ├── screens/ # Full screens like Home, Login, Room Detail
@@ -52,7 +52,7 @@ data/
 ├── AppApi.kt # Retrofit interface for API endpoints
 ├── RetrofitClient.kt # Retrofit instance and configuration
 └── SharedPrefs.kt # Token and session manager
-
+```
 ---
 
 ## ▶️ Getting Started
