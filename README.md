@@ -40,19 +40,18 @@
 
 presentation/
 ├── view/
-│   ├── screens/        # Full screens like Home, Login, Room Detail
-│   └── component/      # UI components like cards, buttons, etc.
-├── viewmodel/          # ViewModels for each screen
-└── navigation/         # Routes, navigation actions, NavHost
+│ ├── screens/ # Full screens like Home, Login, Room Detail
+│ └── component/ # UI components like cards, buttons, etc.
+├── viewmodel/ # ViewModels for each screen
+└── navigation/ # Routes, navigation actions, NavHost
 
 data/
-├── model/              # API data models
-│   └── utils/          # Helper functions and validators
+├── model/ # API data models
+│ └── utils/ # Helper functions and validators
 └── remote/
-    ├── AppApi.kt            # Retrofit interface for API endpoints
-    ├── RetrofitClient.kt    # Retrofit instance and configuration
-    └── SharedPrefs.kt       # Token and session manager
-
+├── AppApi.kt # Retrofit interface for API endpoints
+├── RetrofitClient.kt # Retrofit instance and configuration
+└── SharedPrefs.kt # Token and session manager
 
 ---
 
@@ -76,3 +75,8 @@ Android Developer
 - 💼 [LinkedIn](https://www.linkedin.com/in/mohamed-ali-benouarzeg-3b55582b2/)
 
 ---
+
+## 📝 License
+
+This project is licensed under the **CC BY-NC-ND 4.0 License** – no commercial use or modifications allowed.  
+See the [LICENSE](LICENSE) file for details.
